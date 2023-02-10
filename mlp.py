@@ -43,8 +43,27 @@ class MLP:
         Args:
             x: tensor shape (batch_size, linear_1_in_features)
         """
-        # TODO: Implement the forward function
-        pass
+        linearop1 = torch.matmul(x, torch.transpose(self.parameters["W1"],0 , 1))
+        linearop1 = linearop1 + self.parameters["b1"]
+        nonlinearop1 = torch.zeros(self.parameters["b1"].size(dim=0))
+        if (self.f_function == 'relu'):
+            nonlinearop1 = torch.nn.functional.relu(linearop1)
+        elif (self.f_function == 'sigmoid'):
+            nonlinearop1 = torch.nn.functional.sigmoid(linearop1)
+        else:
+            nonlinearop1 = linearop1
+        linearop2 = torch.matmul(nonlinearop1, torch.transpose(self.parameters["W2"],0 , 1))
+        linearop2 = linearop2 + self.parameters["b2"]
+        nonlinearop2 = torch.zeros(self.parameters["b2"].size(dim=0))
+        if (self.g_function == 'relu'):
+            nonlinearop2 = torch.nn.functional.relu(linearop2)
+        elif (self.g_function == 'sigmoid'):
+            nonlinearop2 = torch.nn.functional.sigmoid(linearop2)
+        else:
+            nonlinearop2 = linearop2
+        
+        return nonlinearop2
+
     
     def backward(self, dJdy_hat):
         """
