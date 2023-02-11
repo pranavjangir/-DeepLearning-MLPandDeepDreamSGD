@@ -90,12 +90,10 @@ def mse_loss(y, y_hat):
         dJdy_hat: The gradient tensor of shape (batch_size, linear_2_out_features)
     """
     diff = y - y_hat
-    N = y.size(dim=0)
-    print(y.size(), N)
-    return torch.sum(torch.square(diff)) / N
-
-
-    # return loss, dJdy_hat
+    N = y.size(dim=0) # batch size
+    M = y.size(dim=1) # Feature size
+    grad = -2 * diff / (N * M)
+    return (torch.sum(torch.square(diff)) / (N * M), grad)
 
 def bce_loss(y, y_hat):
     """
@@ -107,11 +105,13 @@ def bce_loss(y, y_hat):
         loss: scalar of loss
         dJdy_hat: The gradient tensor of shape (batch_size, linear_2_out_features)
     """
-    return -torch.log(torch.matmul(torch.transpose(y, 0, 1), y_hat))
+    N = y.size(dim=0) # batch size
+    M = y.size(dim=1) # Feature size
+    loss = -torch.sum(torch.multiply(y, torch.log(y_hat)) + torch.multiply(1-y, torch.log(1-y_hat))) / (N*M)
+    grad = (-y/y_hat + (1-y)/(1-y_hat)) / (N*M)
+    return loss, grad
 
-    # return loss, dJdy_hat
-
-
+print("Torch version : ", torch.__version__)
 
 
 
