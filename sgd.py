@@ -46,6 +46,25 @@ def normalize_and_jitter(img, step=32):
 
 
 def gradient_descent(input, model, loss, iterations=256):
+    input.detach()
+    input = normalize_and_jitter(input)
+    input.requires_grad_()
+
+    model.eval()
+    for i in range(iterations):
+            
+        input.retain_grad()
+ 
+        model.zero_grad()
+        # optimiser.zero_grad()
+        
+        outputs = model(input)
+        loss_val = loss(outputs)
+        loss_val.backward(retain_graph=True)
+        grads = input.grad
+        input = input + 0.05*grads # Follow the direction of the gradient.
+        print(f"Iteraion {i} score : {loss_val.item()} || Output size : {outputs.size()}")
+
     return input  # IMPLEMENT ME
 
 
