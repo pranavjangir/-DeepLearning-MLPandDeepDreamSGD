@@ -62,8 +62,8 @@ def gradient_descent(input, model, loss, iterations=256):
         loss_val = loss(outputs)
         loss_val.backward(retain_graph=True)
         grads = input.grad
-        input = input + 0.05*grads # Follow the direction of the gradient.
-        print(f"Iteraion {i} score : {loss_val.item()} || Output size : {outputs.size()}")
+        input = input + 0.03*grads # Follow the direction of the gradient.
+        #print(f"Iteraion {i} score : {loss_val.item()} || Output size : {outputs.size()}")
 
     return input  # IMPLEMENT ME
 
